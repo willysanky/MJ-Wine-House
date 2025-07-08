@@ -1,0 +1,51 @@
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
+
+const products = [
+  {
+    id: 1,
+    name: "Sweet Red Wine",
+    price: 1200,
+    image: "https://via.placeholder.com/300x200?text=Red+Wine"
+  },
+  {
+    id: 2,
+    name: "Whiskey Premium",
+    price: 2200,
+    image: "https://via.placeholder.com/300x200?text=Whiskey"
+  },
+  {
+    id: 3,
+    name: "Vodka Ice",
+    price: 950,
+    image: "https://via.placeholder.com/300x200?text=Vodka"
+  }
+];
+
+export default function WinesSpiritsStore() {
+  return (
+    <div className="min-h-screen bg-gray-100 p-8">
+      <h1 className="text-4xl font-bold mb-6 text-center">Wines & Spirits Store</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => (
+          <Card key={product.id} className="rounded-2xl shadow-md">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="rounded-t-2xl w-full h-48 object-cover"
+            />
+            <CardContent className="p-4">
+              <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+              <p className="text-gray-700 mb-4">Ksh {product.price.toLocaleString()}</p>
+              <Button className="w-full flex gap-2">
+                <ShoppingCart className="h-4 w-4" /> Add to Cart
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
