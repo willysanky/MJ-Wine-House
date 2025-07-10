@@ -1,51 +1,177 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MJ Wines & Spirits - Kenya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+    header { background: #8b0000; color: white; padding: 1em; text-align: center; font-size: 24px; }
+    .container { padding: 1em; max-width: 900px; margin: auto; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1em; }
+    .card { background: #fff; border: 1px solid #ccc; padding: 1em; border-radius: 8px; }
+    .btn { padding: 0.5em 1em; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; }
+    .btn-danger { background: #dc3545; }
+    .btn-secondary { background: #007bff; }
+    #cart, #admin-section, #checkout { margin-top: 2em; }
+    input, select { width: 100%; padding: 0.5em; margin-top: 0.5em; margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+  </style>
+</head>
+<body>
 
-const products = [
-  {
-    id: 1,
-    name: "Sweet Red Wine",
-    price: 1200,
-    image: "https://via.placeholder.com/300x200?text=Red+Wine"
-  },
-  {
-    id: 2,
-    name: "Whiskey Premium",
-    price: 2200,
-    image: "https://via.placeholder.com/300x200?text=Whiskey"
-  },
-  {
-    id: 3,
-    name: "Vodka Ice",
-    price: 950,
-    image: "https://via.placeholder.com/300x200?text=Vodka"
+<header>
+  MJ Wines & Spirits
+</header>
+
+<div class="container">
+
+  <!-- Catalog -->
+  <section id="catalog">
+    <h2>Product Catalog</h2>
+    <div class="grid" id="product-list"></div>
+  </section>
+
+  <!-- Cart -->
+  <section id="cart">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+  </section>
+
+  <!-- Checkout -->
+  <section id="checkout">
+    <h2>Checkout</h2>
+    <form id="checkout-form">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="text" id="phone" placeholder="Phone Number (e.g. 2547...)" required>
+      <input type="text" id="address" placeholder="Delivery Address" required>
+      <select id="paymethod">
+        <option value="mpesa">M-Pesa</option>
+        <option value="card">Credit Card (Stripe)</option>
+      </select>
+      <button class="btn btn-secondary" type="submit">Pay Now</button>
+    </form>
+  </section>
+
+  <!-- Admin Section -->
+  <section id="admin-section">
+    <h2>Admin (Product Manager)</h2>
+    <form id="admin-form">
+      <input type="text" id="prod-name" placeholder="Product Name" required>
+      <input type="number" id="prod-price" placeholder="Price in KES" required>
+      <button class="btn" type="submit">Add Product</button>
+    </form>
+    <ul id="admin-products"></ul>
+  </section>
+
+</div>
+
+<script>
+  // Simulated database (use localStorage)
+  const products = JSON.parse(localStorage.getItem('products')) || [
+    { name: "Jameson Irish Whiskey", price: 3200 },
+    { name: "Gilbey's Gin", price: 1350 },
+    { name: "Johnnie Walker Black", price: 4100 }
+  ];
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  function saveProducts() {
+    localStorage.setItem('products', JSON.stringify(products));
   }
-];
 
-export default function WinesSpiritsStore() {
-  return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-4xl font-bold mb-6 text-center">Wines & Spirits Store</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <Card key={product.id} className="rounded-2xl shadow-md">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="rounded-t-2xl w-full h-48 object-cover"
-            />
-            <CardContent className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
-              <p className="text-gray-700 mb-4">Ksh {product.price.toLocaleString()}</p>
-              <Button className="w-full flex gap-2">
-                <ShoppingCart className="h-4 w-4" /> Add to Cart
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+  function saveCart() {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }
+
+  function renderProducts() {
+    const list = document.getElementById('product-list');
+    list.innerHTML = '';
+    products.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <strong>${p.name}</strong><br>
+        KES ${p.price}<br>
+        <button class="btn" onclick="addToCart(${i})">Add to Cart</button>
+      `;
+      list.appendChild(card);
+    });
+    renderAdminList();
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    saveCart();
+    alert("Added to cart!");
+    renderCart();
+  }
+
+  function renderCart() {
+    const div = document.getElementById('cart-items');
+    if (cart.length === 0) {
+      div.innerHTML = "<em>Your cart is empty.</em>";
+      return;
+    }
+    div.innerHTML = cart.map((item, i) => `
+      <div class="card">
+        ${item.name} - KES ${item.price}
+        <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
       </div>
-    </div>
-  );
-}
+    `).join('');
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    renderCart();
+  }
+
+  document.getElementById('checkout-form').onsubmit = e => {
+    e.preventDefault();
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const method = document.getElementById('paymethod').value;
+    const phone = document.getElementById('phone').value;
+    const name = document.getElementById('name').value;
+    const address = document.getElementById('address').value;
+
+    if (method === 'mpesa') {
+      alert(`M-Pesa request sent to ${phone} for KES ${total}.`);
+    } else {
+      alert(`Stripe payment simulated for ${name}, KES ${total}.`);
+    }
+
+    localStorage.removeItem('cart');
+    alert("Order placed! Delivery to: " + address);
+    window.location.reload();
+  };
+
+  // Admin section
+  document.getElementById('admin-form').onsubmit = e => {
+    e.preventDefault();
+    const name = document.getElementById('prod-name').value;
+    const price = document.getElementById('prod-price').value;
+    products.push({ name, price: Number(price) });
+    saveProducts();
+    renderProducts();
+    e.target.reset();
+  };
+
+  function renderAdminList() {
+    const list = document.getElementById('admin-products');
+    list.innerHTML = products.map((p, i) =>
+      `<li>${p.name} - KES ${p.price} <button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></li>`
+    ).join('');
+  }
+
+  function deleteProduct(i) {
+    products.splice(i, 1);
+    saveProducts();
+    renderProducts();
+  }
+
+  // Initial load
+  renderProducts();
+  renderCart();
+</script>
+
+</body>
+</html>
