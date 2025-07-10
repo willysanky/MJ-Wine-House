@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MJ Wine House - Kenya</title>
+  <title>MJ Wines & Spirits - Kenya</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     * { box-sizing: border-box; }
@@ -33,7 +33,6 @@
   <a href="#catalog">Shop</a>
   <a href="#cart">Cart</a>
   <a href="#checkout">Checkout</a>
-  <a href="#admin-section">Admin</a>
 </nav>
 
 <div class="container">
@@ -65,35 +64,40 @@
     </form>
   </section>
 
-  <!-- Admin Section -->
-  <section id="admin-section">
-    <h2>Admin – Manage Products</h2>
-    <form id="admin-form">
-      <input type="text" id="prod-name" placeholder="Product Name" required />
-      <input type="number" id="prod-price" placeholder="Price in KES" required />
-      <input type="url" id="prod-image" placeholder="Image URL (optional)" />
-      <button class="btn" type="submit">Add Product</button>
-    </form>
-    <ul id="admin-products"></ul>
-  </section>
-
 </div>
 
 <footer>&copy; 2025 MJ Wines & Spirits. Made in Kenya 🇰🇪</footer>
 
 <script>
-  const defaultProducts = [
-    { name: "Jameson Irish Whiskey", price: 3200, image: "https://images.unsplash.com/photo-1621768212009-6aa8e9a385b4?fit=crop&w=400" },
-    { name: "Gilbey's Gin", price: 1350, image: "https://images.unsplash.com/photo-1587049352858-b8140c9e98ef?fit=crop&w=400" },
-    { name: "Johnnie Walker Black", price: 4100, image: "https://images.unsplash.com/photo-1607082349250-3f4652e87087?fit=crop&w=400" }
+  const products = [
+    {
+      name: "Jameson Irish Whiskey 750ml",
+      price: 3200,
+      image: "https://www.jamesonwhiskey.com/media/q4mlw13r/jameson_original_bottle.png"
+    },
+    {
+      name: "Gilbey's London Dry Gin 750ml",
+      price: 1350,
+      image: "https://www.drinks.ng/wp-content/uploads/2021/06/Gilbeys-Gin-75cl.jpg"
+    },
+    {
+      name: "Johnnie Walker Black Label 1L",
+      price: 4100,
+      image: "https://kenyaliquorhouse.co.ke/wp-content/uploads/2021/04/johnnie-walker-black-label-1ltr.jpg"
+    },
+    {
+      name: "Smirnoff Vodka Red 750ml",
+      price: 1250,
+      image: "https://www.smirnoff.com/sites/g/files/seuoyk456/files/styles/product_image/public/product-smirnoff-no21-vodka_0.png"
+    },
+    {
+      name: "Baileys Irish Cream 1L",
+      price: 2800,
+      image: "https://www.theliquorbarn.co.ke/wp-content/uploads/2020/12/Baileys-Irish-Cream.jpg"
+    }
   ];
 
-  const products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  function saveProducts() {
-    localStorage.setItem("products", JSON.stringify(products));
-  }
 
   function saveCart() {
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -106,14 +110,13 @@
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <img src="${p.image || 'https://via.placeholder.com/250x180?text=No+Image'}" alt="${p.name}" />
+        <img src="${p.image}" alt="${p.name}" />
         <h4>${p.name}</h4>
         <p>KES ${p.price}</p>
         <button class="btn" onclick="addToCart(${i})">Add to Cart</button>
       `;
       list.appendChild(card);
     });
-    renderAdminList();
   }
 
   function addToCart(index) {
@@ -163,33 +166,6 @@
     alert("Order placed! Delivery to: " + address);
     window.location.reload();
   };
-
-  document.getElementById("admin-form").onsubmit = (e) => {
-    e.preventDefault();
-    const name = document.getElementById("prod-name").value;
-    const price = document.getElementById("prod-price").value;
-    const image = document.getElementById("prod-image").value;
-    products.push({ name, price: Number(price), image });
-    saveProducts();
-    renderProducts();
-    e.target.reset();
-  };
-
-  function renderAdminList() {
-    const list = document.getElementById("admin-products");
-    list.innerHTML = products
-      .map((p, i) =>
-        `<li>${p.name} – KES ${p.price} 
-        <button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></li>`
-      )
-      .join("");
-  }
-
-  function deleteProduct(i) {
-    products.splice(i, 1);
-    saveProducts();
-    renderProducts();
-  }
 
   renderProducts();
   renderCart();
