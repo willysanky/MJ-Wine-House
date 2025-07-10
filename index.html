@@ -1,27 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>MJ Wines & Spirits - Kenya</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-    header { background: #8b0000; color: white; padding: 1em; text-align: center; font-size: 24px; }
-    .container { padding: 1em; max-width: 900px; margin: auto; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1em; }
-    .card { background: #fff; border: 1px solid #ccc; padding: 1em; border-radius: 8px; }
-    .btn { padding: 0.5em 1em; background: #28a745; color: white; border: none; cursor: pointer; border-radius: 5px; }
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; color: #333; }
+    header { background: #8b0000; color: #fff; padding: 1em; text-align: center; font-size: 24px; }
+    nav { background: #5a0000; display: flex; justify-content: center; gap: 2em; padding: 1em; }
+    nav a { color: white; text-decoration: none; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+
+    .container { max-width: 1100px; margin: auto; padding: 1em; }
+
+    h2 { color: #8b0000; margin-top: 2em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1em; margin-top: 1em; }
+    .card { background: white; border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; }
+    .btn { background: #28a745; color: white; padding: 0.5em 1em; border: none; border-radius: 5px; cursor: pointer; margin-top: 0.5em; }
     .btn-danger { background: #dc3545; }
     .btn-secondary { background: #007bff; }
-    #cart, #admin-section, #checkout { margin-top: 2em; }
-    input, select { width: 100%; padding: 0.5em; margin-top: 0.5em; margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+    input, select { width: 100%; padding: 0.6em; margin: 0.5em 0; border: 1px solid #ccc; border-radius: 4px; }
+
+    footer { background: #8b0000; color: white; text-align: center; padding: 1em; margin-top: 3em; }
   </style>
 </head>
 <body>
 
-<header>
-  MJ Wines & Spirits
-</header>
+<header>MJ Wines & Spirits</header>
+<nav>
+  <a href="#catalog">Shop</a>
+  <a href="#cart">Cart</a>
+  <a href="#checkout">Checkout</a>
+  <a href="#admin-section">Admin</a>
+</nav>
 
 <div class="container">
 
@@ -41,9 +54,9 @@
   <section id="checkout">
     <h2>Checkout</h2>
     <form id="checkout-form">
-      <input type="text" id="name" placeholder="Full Name" required>
-      <input type="text" id="phone" placeholder="Phone Number (e.g. 2547...)" required>
-      <input type="text" id="address" placeholder="Delivery Address" required>
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="text" id="phone" placeholder="Phone Number (e.g. 2547...)" required />
+      <input type="text" id="address" placeholder="Delivery Address" required />
       <select id="paymethod">
         <option value="mpesa">M-Pesa</option>
         <option value="card">Credit Card (Stripe)</option>
@@ -54,10 +67,11 @@
 
   <!-- Admin Section -->
   <section id="admin-section">
-    <h2>Admin (Product Manager)</h2>
+    <h2>Admin – Manage Products</h2>
     <form id="admin-form">
-      <input type="text" id="prod-name" placeholder="Product Name" required>
-      <input type="number" id="prod-price" placeholder="Price in KES" required>
+      <input type="text" id="prod-name" placeholder="Product Name" required />
+      <input type="number" id="prod-price" placeholder="Price in KES" required />
+      <input type="url" id="prod-image" placeholder="Image URL (optional)" />
       <button class="btn" type="submit">Add Product</button>
     </form>
     <ul id="admin-products"></ul>
@@ -65,32 +79,36 @@
 
 </div>
 
+<footer>&copy; 2025 MJ Wines & Spirits. Made in Kenya 🇰🇪</footer>
+
 <script>
-  // Simulated database (use localStorage)
-  const products = JSON.parse(localStorage.getItem('products')) || [
-    { name: "Jameson Irish Whiskey", price: 3200 },
-    { name: "Gilbey's Gin", price: 1350 },
-    { name: "Johnnie Walker Black", price: 4100 }
+  const defaultProducts = [
+    { name: "Jameson Irish Whiskey", price: 3200, image: "https://images.unsplash.com/photo-1621768212009-6aa8e9a385b4?fit=crop&w=400" },
+    { name: "Gilbey's Gin", price: 1350, image: "https://images.unsplash.com/photo-1587049352858-b8140c9e98ef?fit=crop&w=400" },
+    { name: "Johnnie Walker Black", price: 4100, image: "https://images.unsplash.com/photo-1607082349250-3f4652e87087?fit=crop&w=400" }
   ];
-  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+  const products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   function saveProducts() {
-    localStorage.setItem('products', JSON.stringify(products));
+    localStorage.setItem("products", JSON.stringify(products));
   }
 
   function saveCart() {
-    localStorage.setItem('cart', JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
   }
 
   function renderProducts() {
-    const list = document.getElementById('product-list');
-    list.innerHTML = '';
+    const list = document.getElementById("product-list");
+    list.innerHTML = "";
     products.forEach((p, i) => {
-      const card = document.createElement('div');
-      card.className = 'card';
+      const card = document.createElement("div");
+      card.className = "card";
       card.innerHTML = `
-        <strong>${p.name}</strong><br>
-        KES ${p.price}<br>
+        <img src="${p.image || 'https://via.placeholder.com/250x180?text=No+Image'}" alt="${p.name}" />
+        <h4>${p.name}</h4>
+        <p>KES ${p.price}</p>
         <button class="btn" onclick="addToCart(${i})">Add to Cart</button>
       `;
       list.appendChild(card);
@@ -106,17 +124,19 @@
   }
 
   function renderCart() {
-    const div = document.getElementById('cart-items');
+    const div = document.getElementById("cart-items");
     if (cart.length === 0) {
       div.innerHTML = "<em>Your cart is empty.</em>";
       return;
     }
-    div.innerHTML = cart.map((item, i) => `
-      <div class="card">
-        ${item.name} - KES ${item.price}
-        <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
-      </div>
-    `).join('');
+    div.innerHTML = cart
+      .map((item, i) => `
+        <div class="card">
+          ${item.name} - KES ${item.price}
+          <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
+        </div>
+      `)
+      .join("");
   }
 
   function removeFromCart(index) {
@@ -125,41 +145,44 @@
     renderCart();
   }
 
-  document.getElementById('checkout-form').onsubmit = e => {
+  document.getElementById("checkout-form").onsubmit = (e) => {
     e.preventDefault();
     const total = cart.reduce((sum, item) => sum + item.price, 0);
-    const method = document.getElementById('paymethod').value;
-    const phone = document.getElementById('phone').value;
-    const name = document.getElementById('name').value;
-    const address = document.getElementById('address').value;
+    const method = document.getElementById("paymethod").value;
+    const phone = document.getElementById("phone").value;
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
 
-    if (method === 'mpesa') {
+    if (method === "mpesa") {
       alert(`M-Pesa request sent to ${phone} for KES ${total}.`);
     } else {
       alert(`Stripe payment simulated for ${name}, KES ${total}.`);
     }
 
-    localStorage.removeItem('cart');
+    localStorage.removeItem("cart");
     alert("Order placed! Delivery to: " + address);
     window.location.reload();
   };
 
-  // Admin section
-  document.getElementById('admin-form').onsubmit = e => {
+  document.getElementById("admin-form").onsubmit = (e) => {
     e.preventDefault();
-    const name = document.getElementById('prod-name').value;
-    const price = document.getElementById('prod-price').value;
-    products.push({ name, price: Number(price) });
+    const name = document.getElementById("prod-name").value;
+    const price = document.getElementById("prod-price").value;
+    const image = document.getElementById("prod-image").value;
+    products.push({ name, price: Number(price), image });
     saveProducts();
     renderProducts();
     e.target.reset();
   };
 
   function renderAdminList() {
-    const list = document.getElementById('admin-products');
-    list.innerHTML = products.map((p, i) =>
-      `<li>${p.name} - KES ${p.price} <button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></li>`
-    ).join('');
+    const list = document.getElementById("admin-products");
+    list.innerHTML = products
+      .map((p, i) =>
+        `<li>${p.name} – KES ${p.price} 
+        <button class="btn btn-danger" onclick="deleteProduct(${i})">Delete</button></li>`
+      )
+      .join("");
   }
 
   function deleteProduct(i) {
@@ -168,7 +191,6 @@
     renderProducts();
   }
 
-  // Initial load
   renderProducts();
   renderCart();
 </script>
