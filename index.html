@@ -8,32 +8,148 @@
     * { box-sizing: border-box; }
     body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; color: #333; }
     header { background: #8b0000; color: #fff; padding: 1em; text-align: center; font-size: 24px; }
-    nav { background: #5a0000; display: flex; justify-content: center; gap: 2em; padding: 1em; }
-    nav a { color: white; text-decoration: none; font-weight: bold; }
-    nav a:hover { text-decoration: underline; }
+
+    nav {
+      background: #5a0000;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 1em;
+      color: white;
+    }
+
+    .nav-left, .nav-right {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .banner {
+      background: url('https://images.unsplash.com/photo-1619637993580-5b647228d4ff?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 4em 1em;
+    }
+
+    .banner h1 {
+      font-size: 36px;
+      margin-bottom: 0.3em;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    .banner p {
+      font-size: 20px;
+      background-color: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+    }
 
     .container { max-width: 1100px; margin: auto; padding: 1em; }
 
     h2 { color: #8b0000; margin-top: 2em; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1em; margin-top: 1em; }
-    .card { background: white; border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 6px; }
-    .btn { background: #28a745; color: white; padding: 0.5em 1em; border: none; border-radius: 5px; cursor: pointer; margin-top: 0.5em; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1em;
+      margin-top: 1em;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .btn {
+      background: #28a745;
+      color: white;
+      padding: 0.5em 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 0.5em;
+    }
+
     .btn-danger { background: #dc3545; }
     .btn-secondary { background: #007bff; }
-    input, select { width: 100%; padding: 0.6em; margin: 0.5em 0; border: 1px solid #ccc; border-radius: 4px; }
 
-    footer { background: #8b0000; color: white; text-align: center; padding: 1em; margin-top: 3em; }
+    input, select {
+      width: 100%;
+      padding: 0.6em;
+      margin: 0.5em 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    footer {
+      background: #8b0000;
+      color: white;
+      text-align: center;
+      padding: 1em;
+      margin-top: 3em;
+    }
+
+    @media (max-width: 768px) {
+      .nav-left, .nav-right {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
 
-<header>MJ Wine House</header>
+<header>MJ Wines & Spirits</header>
+
 <nav>
-  <a href="#catalog">Shop</a>
-  <a href="#cart">Cart</a>
-  <a href="#checkout">Checkout</a>
+  <div class="nav-left">
+    <a href="#catalog">Home</a>
+    <a href="#catalog">Categories</a>
+    <a href="#catalog">Beer</a>
+    <a href="#catalog">Wines</a>
+    <a href="#catalog">Champagne</a>
+    <a href="#catalog">Spirits</a>
+    <a href="#catalog">Others</a>
+    <a href="#catalog">Promotion</a>
+    <a href="#catalog">Gifts</a>
+  </div>
+  <div class="nav-right">
+    <span class="icon">🔍</span>
+    <a href="#cart" class="icon">🛒</a>
+  </div>
 </nav>
+
+<section class="banner">
+  <h1>Order Online for Delivery</h1>
+  <p>Call for assistance: <strong>+254 700 000000</strong></p>
+</section>
 
 <div class="container">
 
@@ -132,14 +248,12 @@
       div.innerHTML = "<em>Your cart is empty.</em>";
       return;
     }
-    div.innerHTML = cart
-      .map((item, i) => `
-        <div class="card">
-          ${item.name} - KES ${item.price}
-          <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
-        </div>
-      `)
-      .join("");
+    div.innerHTML = cart.map((item, i) => `
+      <div class="card">
+        ${item.name} - KES ${item.price}
+        <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
+      </div>
+    `).join('');
   }
 
   function removeFromCart(index) {
