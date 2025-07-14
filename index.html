@@ -12,17 +12,18 @@
     nav {
       background: #5a0000;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       padding: 0.5em 1em;
-      color: white;
+      overflow-x: auto;
+      flex-wrap: nowrap;
     }
 
     .nav-left, .nav-right {
       display: flex;
       gap: 1em;
       align-items: center;
+      flex-wrap: nowrap;
     }
 
     nav a {
@@ -30,15 +31,37 @@
       text-decoration: none;
       font-weight: bold;
       font-size: 14px;
+      white-space: nowrap;
     }
 
     nav a:hover {
       text-decoration: underline;
     }
 
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      padding: 0.2em 0.5em;
+      border-radius: 20px;
+    }
+
+    .search-container input {
+      border: none;
+      outline: none;
+      padding: 0.3em 0.5em;
+      font-size: 14px;
+      width: 120px;
+    }
+
     .icon {
-      font-size: 18px;
+      font-size: 24px;
+      margin-left: 10px;
       cursor: pointer;
+      background-color: #fff;
+      color: #5a0000;
+      padding: 5px;
+      border-radius: 50%;
     }
 
     .banner {
@@ -115,13 +138,6 @@
       padding: 1em;
       margin-top: 3em;
     }
-
-    @media (max-width: 768px) {
-      .nav-left, .nav-right {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
   </style>
 </head>
 <body>
@@ -141,7 +157,10 @@
     <a href="#catalog">Gifts</a>
   </div>
   <div class="nav-right">
-    <span class="icon">🔍</span>
+    <div class="search-container">
+      <input type="text" placeholder="Search..." />
+      <span class="icon">🔍</span>
+    </div>
     <a href="#cart" class="icon">🛒</a>
   </div>
 </nav>
