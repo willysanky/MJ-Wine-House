@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>MJ Wines & Spirits - Kenya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #fafafa; color: #333; }
+    header { background: #8b0000; color: #fff; padding: 1em; text-align: center; font-size: 24px; }
+
+    nav {
+      background: #5a0000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 1em;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+    }
+
+    .nav-left, .nav-right {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .search-container {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      padding: 0.2em 0.5em;
+      border-radius: 20px;
+    }
+
+    .search-container input {
+      border: none;
+      outline: none;
+      padding: 0.3em 0.5em;
+      font-size: 14px;
+      width: 120px;
+    }
+
+    .icon {
+      font-size: 24px;
+      margin-left: 10px;
+      cursor: pointer;
+      background-color: #fff;
+      color: #5a0000;
+      padding: 5px;
+      border-radius: 50%;
+    }
+
+    .banner {
+      background: url('https://github.com/willysanky/MJ-Wine-House/blob/main/MJ%20Wine%20Hous.jpg?raw=true') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 4em 1em;
+    }
+
+    .banner h1 {
+      font-size: 36px;
+      margin-bottom: 0.3em;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    .banner p {
+      font-size: 20px;
+      background-color: rgba(0,0,0,0.5);
+      display: inline-block;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+    }
+
+    .container { max-width: 1100px; margin: auto; padding: 1em; }
+
+    h2 { color: #8b0000; margin-top: 2em; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1em;
+      margin-top: 1em;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 1em;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn {
+      background: #28a745;
+      color: white;
+      padding: 0.5em 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 0.5em;
+    }
+
+    .btn-danger { background: #dc3545; }
+    .btn-secondary { background: #007bff; }
+
+    input, select {
+      width: 100%;
+      padding: 0.6em;
+      margin: 0.5em 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    footer {
+      background: #8b0000;
+      color: white;
+      text-align: center;
+      padding: 1em;
+      margin-top: 3em;
+    }
+
+    /* Lightbox Styling */
+    #lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>MJ Wine House</header>
+
+<nav>
+  <div class="nav-left">
+    <a href="#catalog">Home</a>
+    <a href="#catalog">Categories</a>
+    <a href="#catalog">Beer</a>
+    <a href="#catalog">Wines</a>
+    <a href="#catalog">Champagne</a>
+    <a href="#catalog">Spirits</a>
+    <a href="#catalog">Others</a>
+    <a href="#catalog">Promotion</a>
+    <a href="#catalog">Gifts</a>
+  </div>
+  <div class="nav-right">
+    <div class="search-container">
+      <input type="text" placeholder="Search..." />
+      <span class="icon">🔍</span>
+    </div>
+    <a href="#cart" class="icon">🛒</a>
+  </div>
+</nav>
+
+<section class="banner">
+  <h1>Order Online for Delivery</h1>
+  <p>Call for assistance: <strong>+254 700 000000</strong></p>
+</section>
+
+<div class="container">
+
+  <!-- Catalog -->
+  <section id="catalog">
+    <h2>Product Catalog</h2>
+    <div class="grid" id="product-list"></div>
+  </section>
+
+  <!-- Cart -->
+  <section id="cart">
+    <h2>Your Cart</h2>
+    <div id="cart-items"></div>
+  </section>
+
+  <!-- Checkout -->
+  <section id="checkout">
+    <h2>Checkout</h2>
+    <form id="checkout-form">
+      <input type="text" id="name" placeholder="Full Name" required />
+      <input type="text" id="phone" placeholder="Phone Number (e.g. 2547...)" required />
+      <input type="text" id="address" placeholder="Delivery Address" required />
+      <select id="paymethod">
+        <option value="mpesa">M-Pesa</option>
+        <option value="card">Credit Card (Stripe)</option>
+      </select>
+      <button class="btn btn-secondary" type="submit">Pay Now</button>
+    </form>
+  </section>
+
+</div>
+
+<footer>&copy; 2025 MJ Wine House. Made in Kenya 🇰🇪</footer>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" onclick="this.style.display='none'">
+  <img id="lightbox-img" src="" alt="Product Image">
+</div>
+
+<script>
+  const products = [
+    {
+      name: "Jameson Irish Whiskey 750ml",
+      price: 3200,
+      image: "https://github.com/willysanky/MJ-Wine-House/blob/main/Jameson-Select-Reserve-750ml.jpg?raw=true"
+    },
+    {
+      name: "Gilbey's London Dry Gin 750ml",
+      price: 1350,
+      image: "https://github.com/willysanky/MJ-Wine-House/blob/main/Buy-Gilbeys-Gin-1L-online-in-Nairobi.jpg?raw=true"
+    },
+    {
+      name: "Johnnie Walker Black Label 1L",
+      price: 4100,
+      image: "https://github.com/willysanky/MJ-Wine-House/blob/main/Johnnie-Walker-Black-Label-4.5-Litres.jpg?raw=true"
+    },
+    {
+      name: "Smirnoff Vodka Red 750ml",
+      price: 1250,
+      image: "https://github.com/willysanky/MJ-Wine-House/blob/main/smirnoff-expresso.jpg?raw=true"
+    },
+    {
+      name: "Baileys Irish Cream 1L",
+      price: 2800,
+      image: "https://github.com/willysanky/MJ-Wine-House/blob/main/Buy-Baileys-Delight-online-in-Nairobi.jpg?raw=true"
+    }
+  ];
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  function saveCart() {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  function renderProducts() {
+    const list = document.getElementById("product-list");
+    list.innerHTML = "";
+    products.forEach((p, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${p.image}" alt="${p.name}" />
+        <h4>${p.name}</h4>
+        <p>KES ${p.price}</p>
+        <button class="btn" onclick="addToCart(${i})">Add to Cart</button>
+      `;
+      list.appendChild(card);
+    });
+
+    // Add lightbox click handler
+    document.querySelectorAll(".card img").forEach(img => {
+      img.addEventListener("click", () => {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.src = img.src;
+        lightbox.style.display = "flex";
+      });
+    });
+  }
+
+  function addToCart(index) {
+    cart.push(products[index]);
+    saveCart();
+    alert("Added to cart!");
+    renderCart();
+  }
+
+  function renderCart() {
+    const div = document.getElementById("cart-items");
+    if (cart.length === 0) {
+      div.innerHTML = "<em>Your cart is empty.</em>";
+      return;
+    }
+    div.innerHTML = cart.map((item, i) => `
+      <div class="card">
+        ${item.name} - KES ${item.price}
+        <button class="btn btn-danger" onclick="removeFromCart(${i})">Remove</button>
+      </div>
+    `).join('');
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    saveCart();
+    renderCart();
+  }
+
+  document.getElementById("checkout-form").onsubmit = (e) => {
+    e.preventDefault();
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const method = document.getElementById("paymethod").value;
+    const phone = document.getElementById("phone").value;
+    const name = document.getElementById("name").value;
+    const address = document.getElementById("address").value;
+
+    if (method === "mpesa") {
+      alert(`M-Pesa request sent to ${phone} for KES ${total}.`);
+    } else {
+      alert(`Stripe payment simulated for ${name}, KES ${total}.`);
+    }
+
+    localStorage.removeItem("cart");
+    alert("Order placed! Delivery to: " + address);
+    window.location.reload();
+  };
+
+  renderProducts();
+  renderCart();
+</script>
+
+</body>
+</html>
