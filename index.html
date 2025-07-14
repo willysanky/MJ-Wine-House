@@ -105,9 +105,16 @@
 
     .card img {
       width: 100%;
-      height: 180px;
-      object-fit: cover;
+      height: auto;
+      object-fit: contain;
       border-radius: 6px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     .btn {
@@ -138,6 +145,26 @@
       padding: 1em;
       margin-top: 3em;
     }
+
+    /* Lightbox Styling */
+    #lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    #lightbox img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
@@ -150,9 +177,11 @@
     <a href="#catalog">Categories</a>
     <a href="#catalog">Beer</a>
     <a href="#catalog">Wines</a>
+    <a href="#catalog">Champagne</a>
     <a href="#catalog">Spirits</a>
     <a href="#catalog">Others</a>
-    <a href="#catalog">Promotions</a>
+    <a href="#catalog">Promotion</a>
+    <a href="#catalog">Gifts</a>
   </div>
   <div class="nav-right">
     <div class="search-container">
@@ -200,6 +229,11 @@
 </div>
 
 <footer>&copy; 2025 MJ Wine House. Made in Kenya 🇰🇪</footer>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" onclick="this.style.display='none'">
+  <img id="lightbox-img" src="" alt="Product Image">
+</div>
 
 <script>
   const products = [
@@ -249,6 +283,16 @@
         <button class="btn" onclick="addToCart(${i})">Add to Cart</button>
       `;
       list.appendChild(card);
+    });
+
+    // Add lightbox click handler
+    document.querySelectorAll(".card img").forEach(img => {
+      img.addEventListener("click", () => {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.src = img.src;
+        lightbox.style.display = "flex";
+      });
     });
   }
 
